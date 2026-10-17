@@ -337,3 +337,4 @@ table.data tr.shift-demo > td { padding: 6px 0 22px; }
 .masthead .authors sup { margin-left: 1px; font-size: 11.5px; font-weight: 500; color: var(--muted); }
 .masthead .affils { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 16px; margin: 0; font-size: 14.5px; color: var(--muted); }
 .masthead .affils sup { margin-right: 2px; font-size: 10.5px; }
+.masthead .affils.notes { margin-top: 4px; font-size: 13.5px; }
