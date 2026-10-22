@@ -155,7 +155,7 @@ python baselines/evaluate.py --run runs/rorl_hopper/seed0</pre>
       </ul>
       <ul class="linklist">
         <li><a href="docs/shifts/">Shift sources and modes</a><span>Declare a shift as data; targets, mode names, schedules, composition.</span></li>
-        <li><a href="docs/shifts/add-a-shift-factor/">Add a new shift factor</a><span>Evaluate any simulator quantity at several scales.</span></li>
+        <li><a href="docs/shifts/add-a-shift-factor/">Add a new shift factor</a><span>Evaluate any simulator quantity at several magnitudes.</span></li>
         <li><a href="docs/shifts/add-a-backend/">Add a physics simulation</a><span>One adapter carries the toolbox to a new simulator.</span></li>
         <li><a href="docs/algorithms/">All algorithms</a><span>One page per method: mechanism, cards, results by task.</span></li>
       </ul>
@@ -218,10 +218,11 @@ python baselines/evaluate.py --run runs/rorl_hopper/seed0</pre>
   <div class="wrap">
     <p class="kicker">Shift toolbox</p>
     <h2>Six shift sources, five modes, six task families.</h2>
-    <p>A shift has a source, which says what is perturbed, and a mode, which says how the intervention is
-      built: stochastic, adversarial, parametric, non-stationary through a schedule, or a composition of
-      several shifts. A shifted environment is a base task with one wrapper per shift; the task code is not
-      modified.</p>
+    <p>A shift is one perturbation configuration (source, factor, mode, magnitude, resampling rule, optional
+      schedule, seed). The source says where the intervention enters the loop, the factor what it perturbs, and
+      the mode how it is built: stochastic, adversarial, parametric, non-stationary through a schedule, or a
+      composition of several shifts. A shifted environment is a base task with one wrapper per configuration;
+      the task code is not modified.</p>
     <figure>
       <img src="docs/assets/figures/shift-loop.svg" alt="The six shift sources on the loop between agent and environment: observation, action, dynamics, reward/cost, latency and semantic.">
       <figcaption><b>Where the six sources act.</b> Four sources act on one component of the agent–environment loop; the

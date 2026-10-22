@@ -192,11 +192,19 @@ closes around the plant, which noise on an observation or an action cannot imita
 <td><code>latency</code></td>
 </tr>
 <tr>
+<td>Factors</td>
+<td>Action delay, observation delay, control period, reward delivery</td>
+</tr>
+<tr>
+<td>Resampling rule</td>
+<td>Fixed for <code>fixed</code> and <code>delay</code>; per episode for <code>buffer</code> and <code>interp</code>, or per step with <code>resample: "step"</code>; per policy decision for <code>substep</code></td>
+</tr>
+<tr>
 <td>Modes</td>
 <td>Stochastic, Parametric, Non-stationary, Composition</td>
 </tr>
 <tr>
-<td>Units</td>
+<td>Magnitude</td>
 <td>Control steps for <code>fixed</code>, <code>buffer</code> and <code>delay</code>; seconds for <code>substep</code> and <code>interp</code></td>
 </tr>
 <tr>
@@ -262,6 +270,8 @@ Randomization</em>, 2018) and the interpolated observation history of Tan et al.
 Learning Agile Locomotion For Quadruped Robots</em>, 2018). The Adversarial mode is not defined for
 this shift.</p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p>The mode name selects the factor; the parameters set the magnitude and, for <code>buffer</code> and <code>interp</code>,
+the resampling rule.</p>
 <table>
 <thead>
 <tr>

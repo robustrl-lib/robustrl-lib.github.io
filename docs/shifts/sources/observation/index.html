@@ -191,6 +191,14 @@ from the task to the policy and leaves the state of the simulator untouched.</p>
 <td><code>observation</code></td>
 </tr>
 <tr>
+<td>Factors</td>
+<td>The observation vector, or the entries of a dictionary observation named in <code>keys</code></td>
+</tr>
+<tr>
+<td>Resampling rule</td>
+<td>Per step for <code>gauss</code>, <code>uniform</code>, <code>relative</code> and <code>adversarial</code>; per episode for <code>bias</code>; fixed for <code>shift</code></td>
+</tr>
+<tr>
 <td>Modes</td>
 <td>Stochastic, Adversarial, Parametric, Non-stationary, Composition</td>
 </tr>
@@ -261,6 +269,7 @@ from the task to the policy and leaves the state of the simulator untouched.</p>
 </tbody>
 </table>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p><code>keys</code> names the factor of a dictionary observation; the other parameters set the magnitude.</p>
 <table>
 <thead>
 <tr>

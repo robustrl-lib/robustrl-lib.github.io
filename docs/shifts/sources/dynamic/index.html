@@ -195,8 +195,12 @@ applies an external force to a body, or perturbs the simulator state between ste
 <td>Stochastic, Parametric, Non-stationary, Composition</td>
 </tr>
 <tr>
-<td>Applied</td>
-<td>Parameter edits at every <code>reset</code>; forces during a push; state noise after every step</td>
+<td>Factors</td>
+<td>A physical parameter named by <code>param</code> and <code>index</code>, a pushed <code>body</code>, or the simulator state</td>
+</tr>
+<tr>
+<td>Resampling rule</td>
+<td>Per episode for <code>gauss</code>, <code>uniform</code> and <code>loguniform</code>; per event for <code>push</code>; per step for noise on <code>transition</code>; fixed for <code>scale</code>, <code>set</code> and <code>translate</code></td>
 </tr>
 <tr>
 <td>Acts on a frozen policy</td>
@@ -263,7 +267,8 @@ applies an external force to a body, or perturbs the simulator state between ste
 <p><strong>The target <code>transition</code> accepts only the mode name <code>gauss</code></strong>; any other mode name raises
 <code>ValueError</code> when the environment is built. The Adversarial mode is not defined for this shift.</p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
-<p>Parameter edits on the target <code>dynamics</code>:</p>
+<p><code>param</code> and <code>index</code> name the factor, and the parameters of the mode name set its magnitude.
+Parameter edits on the target <code>dynamics</code>:</p>
 <table>
 <thead>
 <tr>

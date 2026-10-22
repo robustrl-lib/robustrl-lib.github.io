@@ -161,7 +161,8 @@
 
       <main class="bk-article" id="bk-content">
         <h1 id="add-a-new-shift-factor">Add a new shift factor<a class="headerlink" href="#add-a-new-shift-factor" title="Permanent link">&para;</a></h1>
-<p>A shift factor is one quantity of a task that an evaluation grid perturbs at several scales:
+<p>A shift factor is the factor field of a perturbation configuration: one quantity of a task that an
+evaluation grid perturbs at several magnitudes:
 gravity, limb length and actuator gear on the MuJoCo locomotion tasks, friction, gear and
 morphology on CarRacing, engine power, gravity and wind on LunarLander. The benchmark's grids
 use three factors per task, but a factor is only a parameter name the simulator adapter
@@ -178,11 +179,11 @@ one. This page adds contact friction to Hopper and then a field the adapter does
 <tbody>
 <tr>
 <td>What it is</td>
-<td>One parameter name, evaluated at several scales of its nominal value</td>
+<td>The factor of a perturbation configuration: one parameter name, evaluated at several magnitudes</td>
 </tr>
 <tr>
 <td>Declared in</td>
-<td>The <code>grid</code> of an eval card, one condition per scale: <code>axis</code> names the factor, <code>severity</code> records the scale and <code>quartile</code> groups the scales</td>
+<td>The <code>grid</code> of an eval card, one condition per magnitude: <code>axis</code> names the factor, <code>severity</code> records the magnitude and <code>quartile</code> the shift level, Q1 to Q4</td>
 </tr>
 <tr>
 <td>Code needed</td>

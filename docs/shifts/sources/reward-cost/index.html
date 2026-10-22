@@ -196,8 +196,12 @@ the dynamics untouched.</p>
 <td>Stochastic, Parametric, Non-stationary, Composition</td>
 </tr>
 <tr>
-<td>Applied</td>
-<td>At every <code>step</code></td>
+<td>Factors</td>
+<td>The reward, or the field of <code>info</code> named by <code>info_key</code></td>
+</tr>
+<tr>
+<td>Resampling rule</td>
+<td>Per step for <code>gauss</code> and <code>uniform</code>; fixed for <code>shift</code>; applied at every <code>step</code></td>
 </tr>
 <tr>
 <td>Acts on a frozen policy</td>
@@ -249,6 +253,7 @@ the dynamics untouched.</p>
 <p>The Adversarial mode is not defined for this shift. <strong><code>cost</code> has no delay</strong>; the mode name
 <code>delay</code> postpones the reward and belongs to the <a href="../latency/">Latency shift</a>.</p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p><code>info_key</code> names the factor of a cost; the other parameters set the magnitude.</p>
 <table>
 <thead>
 <tr>

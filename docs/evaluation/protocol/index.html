@@ -183,7 +183,7 @@ to freeze, and the frozen checkpoint is scored on a grid of shift conditions.</p
 </tr>
 <tr>
 <td>Conditions</td>
-<td>The <code>grid</code> of an eval card; each condition is a list of shifts</td>
+<td>The <code>grid</code> of an eval card; each condition is a list of perturbation configurations</td>
 </tr>
 <tr>
 <td>Episodes</td>
@@ -251,7 +251,7 @@ method was trained. The Isaac Lab and VLA studies have evaluators of their own, 
 <tr>
 <td><code>grid[].axis</code>, <code>quartile</code>, <code>severity</code>, <code>channel</code></td>
 <td></td>
-<td>Optional labels, copied into the result; <code>axis</code> names the shift factor, see <a href="../../shifts/add-a-shift-factor/">Add a new shift factor</a></td>
+<td>Optional labels, copied into the result; <code>axis</code> names the shift factor, <code>severity</code> its magnitude and <code>quartile</code> the shift level Q1–Q4, see <a href="../../shifts/add-a-shift-factor/">Add a new shift factor</a></td>
 </tr>
 </tbody>
 </table>
@@ -266,7 +266,7 @@ method was trained. The Isaac Lab and VLA studies have evaluators of their own, 
 <tbody>
 <tr>
 <td><code>part1_&lt;task&gt;.yaml</code></td>
-<td>The library-wide grid: three shift factors per task at eight scales, grouped into quartiles</td>
+<td>The library-wide grid: three shift factors per task at eight magnitudes, grouped into the shift levels Q1–Q4</td>
 <td>Part 1</td>
 </tr>
 <tr>
@@ -329,8 +329,8 @@ method was trained. The Isaac Lab and VLA studies have evaluators of their own, 
 </code></pre></div>
 <p>The three excerpts are a Dynamic shift in the Parametric mode, a Latency shift and a Dynamic shift
 in the Non-stationary mode, and a condition CarRacing reads when it builds the track.
-<code>part1_mujoco.yaml</code> holds the nominal condition and three axes, gravity, limb length and actuator
-gear, each at eight factors from 0.6 to 1.4: 25 conditions.</p>
+<code>part1_mujoco.yaml</code> holds the nominal condition and three shift factors, gravity, limb length and
+actuator gear, each at eight magnitudes from 0.6 to 1.4: 25 conditions.</p>
 <p>A grid is checked before a long evaluation by building each condition once.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_env</span>

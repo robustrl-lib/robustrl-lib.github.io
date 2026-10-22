@@ -195,8 +195,12 @@ objects, the lights and the cameras, and it displaces objects and cameras by a p
 <td>Stochastic, Parametric, Non-stationary, Composition</td>
 </tr>
 <tr>
-<td>Applied</td>
-<td>At every <code>reset</code>; with a schedule before every step</td>
+<td>Factors</td>
+<td>The colour of a geom, a light, a camera, or the position of an object, a camera or a light</td>
+</tr>
+<tr>
+<td>Resampling rule</td>
+<td>Fixed for <code>hue</code>, <code>tint</code>, <code>swap</code>, <code>scale</code>, <code>set</code> and <code>translate</code>; per episode for <code>gauss</code>, <code>uniform</code> and <code>loguniform</code>; applied at every <code>reset</code>, and before every step with a schedule</td>
 </tr>
 <tr>
 <td>Acts on a frozen policy</td>
@@ -262,7 +266,8 @@ objects, the lights and the cameras, and it displaces objects and cameras by a p
 </table>
 <p>The Adversarial mode is not defined for this shift.</p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
-<p>Colour mode names on the target <code>appearance</code>:</p>
+<p><code>geom</code>, <code>geoms</code>, <code>geom_prefix</code> or <code>param</code> name the factor; the other parameters set the magnitude.
+Colour mode names on the target <code>appearance</code>:</p>
 <table>
 <thead>
 <tr>

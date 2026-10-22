@@ -161,9 +161,12 @@
 
       <main class="bk-article" id="bk-content">
         <h1 id="shift-sources-and-modes">Shift Sources and Modes<a class="headerlink" href="#shift-sources-and-modes" title="Permanent link">&para;</a></h1>
-<p>RobustRLlib declares a deployment shift as data. A shift has a source, which says what is
-perturbed, and a mode, which says how the intervention is built. A shifted environment is a base
-task with one wrapper per shift, and the task code is not modified.</p>
+<p>RobustRLlib declares a deployment shift as data. One shift is a <strong>perturbation configuration</strong>,
+the tuple (source, factor, mode, magnitude, resampling rule, optional schedule, seed): the source
+says where the intervention enters the loop, the factor what it perturbs, the mode how it is built,
+the magnitude how far it departs from nominal, the resampling rule and the schedule how it evolves
+within an episode, and the seed makes its draws reproducible. A shifted environment is a base task
+with one wrapper per configuration, and the task code is not modified.</p>
 <p><img alt="The agent and the environment form a loop. The Observation shift sits between environment and agent, the Action shift between agent and environment, the Dynamic shift inside the environment, and the Reward/cost shift on the learning signal. The Latency shift and the Semantic shift act at several points of the loop." src="../assets/figures/shift-loop.svg" width="860" /></p>
 <p><em>The six shift sources on the loop between agent and environment, in the notation of the
 paper. Four of them act on one component of the loop. The Latency shift and the Semantic shift
@@ -182,8 +185,12 @@ act at several points, which the small tags mark.</em></p>
 <td><code>make_robust(env_id, shifts=[...], seed=...)</code> returns an environment with the standard <code>reset</code> and <code>step</code></td>
 </tr>
 <tr>
+<td>Configuration</td>
+<td>(source, factor, mode, magnitude, resampling rule, optional schedule, seed); see <a href="#perturbation-configuration">Perturbation configuration</a></td>
+</tr>
+<tr>
 <td>Declaration</td>
-<td><code>ShiftSpec(target, mode, params, schedule, seed)</code>, or the same keys in YAML</td>
+<td><code>ShiftSpec(target, mode, params, schedule, seed)</code>, which writes the seven fields, or the same keys in YAML</td>
 </tr>
 <tr>
 <td>Sources</td>
@@ -195,11 +202,11 @@ act at several points, which the small tags mark.</em></p>
 </tr>
 <tr>
 <td>Evaluation</td>
-<td>A grid condition is a list of shifts; see <a href="../evaluation/protocol/">Evaluation Protocol</a></td>
+<td>A grid condition is a list of perturbation configurations; see <a href="../evaluation/protocol/">Evaluation Protocol</a></td>
 </tr>
 <tr>
 <td>Factors</td>
-<td>One parameter name evaluated at several scales; see <a href="add-a-shift-factor/">Add a new shift factor</a></td>
+<td>One parameter name evaluated at several magnitudes; see <a href="add-a-shift-factor/">Add a new shift factor</a></td>
 </tr>
 <tr>
 <td>Simulators</td>
@@ -397,6 +404,96 @@ read a schedule. Composition applies to every shift.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="perturbation-configuration">Perturbation configuration<a class="headerlink" href="#perturbation-configuration" title="Permanent link">&para;</a></h2>
+<p>Each field of the tuple is written by one part of a <code>ShiftSpec</code>. The factor and the magnitude are
+parameters of the mode name, and the resampling rule follows from the mode name.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>What it says</th>
+<th>In <code>ShiftSpec</code></th>
+<th>Gravity × 1.3 on Hopper</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source</td>
+<td>Where the intervention enters the loop</td>
+<td><code>target</code>: six sources, written with eight targets</td>
+<td><code>"dynamics"</code></td>
+</tr>
+<tr>
+<td>Factor</td>
+<td>What it perturbs</td>
+<td><code>param</code> and <code>index</code> for a physical, light or camera parameter; <code>body</code> for a push; <code>geoms</code> for a colour; <code>keys</code> or <code>info_key</code> for one entry of an observation or a cost; otherwise the whole signal</td>
+<td><code>"param": "gravity"</code></td>
+</tr>
+<tr>
+<td>Mode</td>
+<td>How the intervention is built</td>
+<td><code>mode</code>, one of 22 mode names</td>
+<td><code>"scale"</code></td>
+</tr>
+<tr>
+<td>Magnitude</td>
+<td>How far it departs from nominal, in the units of the operator</td>
+<td>The value parameters of the mode name, such as <code>factor</code>, <code>value</code>, <code>offset</code>, <code>sigma</code>, <code>low</code> and <code>high</code>, <code>eps</code>, <code>degrees</code>, <code>steps</code> or <code>force</code></td>
+<td><code>"factor": 1.3</code></td>
+</tr>
+<tr>
+<td>Resampling rule</td>
+<td>Whether a value is redrawn at every step, held for an episode, or fixed</td>
+<td>Set by the mode name, see <a href="#resampling-rules">Resampling rules</a>; <code>resample: "step"</code> on the latency mode names <code>buffer</code> and <code>interp</code></td>
+<td>Fixed</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td>Optional; when the intervention is active and how its magnitude evolves</td>
+<td><code>schedule</code>; <code>None</code> is stationary</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td>Seed</td>
+<td>Makes the draws reproducible</td>
+<td><code>seed</code>, else the seed passed to <code>make_robust</code></td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="resampling-rules">Resampling rules<a class="headerlink" href="#resampling-rules" title="Permanent link">&para;</a></h2>
+<p>The mode name fixes when a value is drawn. A schedule then multiplies the magnitude by a value that
+changes within the episode.</p>
+<table>
+<thead>
+<tr>
+<th>Resampling rule</th>
+<th>Mode names</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Per step</td>
+<td><code>gauss</code>, <code>uniform</code> and <code>relative</code> on observations, actions, rewards and costs; <code>gauss</code> on <code>transition</code>; <code>adversarial</code>, <code>oppose</code>, <code>rotate</code> and <code>oppose_goal</code>, computed from the current observation or action</td>
+</tr>
+<tr>
+<td>Per policy decision</td>
+<td><code>substep</code>: one control period per action, at a rate drawn per episode</td>
+</tr>
+<tr>
+<td>Per episode, at <code>reset</code></td>
+<td><code>bias</code>; <code>gauss</code>, <code>uniform</code> and <code>loguniform</code> on <code>dynamics</code> and <code>appearance</code>; <code>buffer</code> and <code>interp</code>, unless <code>resample</code> is <code>"step"</code></td>
+</tr>
+<tr>
+<td>Per event</td>
+<td><code>push</code>: the phase of the first push is drawn per episode, the direction per push</td>
+</tr>
+<tr>
+<td>Fixed</td>
+<td><code>shift</code>, <code>scale</code>, <code>set</code>, <code>translate</code>, <code>hue</code>, <code>tint</code>, <code>swap</code>, <code>fixed</code> and <code>delay</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="declare-a-shift">Declare a shift<a class="headerlink" href="#declare-a-shift" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_robust</span><span class="p">,</span> <span class="n">ShiftSpec</span>
 
@@ -415,6 +512,7 @@ read a schedule. Composition applies to every shift.</p>
 <th>Type</th>
 <th>Default</th>
 <th>Meaning</th>
+<th>Field of the configuration</th>
 </tr>
 </thead>
 <tbody>
@@ -423,30 +521,35 @@ read a schedule. Composition applies to every shift.</p>
 <td>str</td>
 <td>required</td>
 <td>Where the shift acts; one of the eight targets</td>
+<td>Source</td>
 </tr>
 <tr>
 <td><code>mode</code></td>
 <td>str</td>
 <td>required</td>
 <td>The mode name</td>
+<td>Mode, and with it the resampling rule</td>
 </tr>
 <tr>
 <td><code>params</code></td>
 <td>dict</td>
 <td>empty</td>
 <td>Parameters of the mode name; listed on the page of each shift</td>
+<td>Factor and magnitude</td>
 </tr>
 <tr>
 <td><code>schedule</code></td>
 <td>dict</td>
 <td><code>None</code></td>
 <td>Declares the Non-stationary mode</td>
+<td>Schedule</td>
 </tr>
 <tr>
 <td><code>seed</code></td>
 <td>int</td>
 <td><code>None</code></td>
 <td>A seed for this shift alone</td>
+<td>Seed</td>
 </tr>
 </tbody>
 </table>
@@ -616,6 +719,10 @@ type.</p>
   <li><a class="bk-toc-link" href="#shift-modes">Shift modes</a>
   </li>
   <li><a class="bk-toc-link" href="#sources-by-mode">Sources by mode</a>
+  </li>
+  <li><a class="bk-toc-link" href="#perturbation-configuration">Perturbation configuration</a>
+  </li>
+  <li><a class="bk-toc-link" href="#resampling-rules">Resampling rules</a>
   </li>
   <li><a class="bk-toc-link" href="#declare-a-shift">Declare a shift</a>
   </li>
